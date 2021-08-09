@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.7'
 
 services:
   python:
@@ -9,17 +9,15 @@ services:
     ports:
       - 8000:8000
     volumes: 
-      - data:/app/data
+      - ./backend:/app
   js:
     image: frontend
     build:
       context: .
       dockerfile: ./DockerFiles/js.Dockerfile
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     ports:
-      - 80:3000
+      - 80:80
     volumes: 
-      - data:/app/data
-
-volumes: 
-  data:
-    name: data
+      - ./frontend/src:/app/src

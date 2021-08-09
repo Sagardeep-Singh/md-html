@@ -1,11 +1,14 @@
-FROM node:16.6.1-buster
-
-#RUN npm install --build-from-source zeromq@6.0.0-beta.5 
-EXPOSE 3000
+FROM node:16.6.1-buster as build
 
 WORKDIR /app
-COPY ./frontend .
 
-RUN npm install
+COPY ./frontend ./
+RUN npm ci
 
-CMD npm start
+RUN npm run build
+
+# production environment
+FROM nginx:stable-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
