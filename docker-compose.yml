@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  python:
+    image: api
+    build:
+      context: .
+      dockerfile: ./DockerFiles/python.Dockerfile
+    ports:
+      - 8000:8000
+    volumes: 
+      - data:/app/data
+  js:
+    image: frontend
+    build:
+      context: .
+      dockerfile: ./DockerFiles/js.Dockerfile
+    ports:
+      - 80:3000
+    volumes: 
+      - data:/app/data
+
+volumes: 
+  data:
+    name: data
