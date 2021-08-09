@@ -1,39 +1,78 @@
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Editor from "./Editor";
+import parse from 'html-react-parser';
 import { useState } from "react";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Editor from "./Editor";
+import DOMPurify from 'dompurify';
+
+const axios = require('axios');
 
 const MdHtml = () => {
-  const [value, setValue] = useState("");
+  const [mdValue, setMdValue] = useState("Some");
+  const [htmlValue, setHtmlValue] = useState(mdValue);
 
-  const handleMdChange = (event)=>{
+  const handleMdChange = (event) => {
     event.preventDefault();
-    setValue(event.target.value);
+    setMdValue(event.target.value);
+    getHtml(event.target.value)
+      .then(res => setHtmlValue(res.data));
   };
 
-  const getHtml = (md)=>{
-      fetch("http://localhost:8080/html",{
-          method:"POST",
-          data:{md},
-          dataType:"application/json"
-      });
-  }
+  const handleHtmlChange = (event) => {
+    event.preventDefault();
+    setHtmlValue(event.target.value);
+    getMd(event.target.value)
+      .then(res => setMdValue(res.data));
+  };
 
-  return (
+  const getHtml = async (md) => {
+    const url = "http://192.168.1.19:8000/html";
+    const data = {
+      md: md,
+    };
+
+    return axios.post(url, data);
+  };
+
+  const getMd = async (html) => {
+    const url = "http://192.168.1.19:8000/md";
+    const data = {
+      html: html,
+    };
+
+    return axios.post(url, data);
+  };
+
+  return (<>
     <Row className="row-cols-1 row-cols-md-2">
       <Col>
-        <Editor placeholder="Please enter Markdown here" label="Markdown" value={value} onChange={handleMdChange}/>
+        <Editor
+          placeholder="Please enter Markdown here"
+          label="Markdown"
+          value={mdValue}
+          onChange={handleMdChange}
+        />
       </Col>
       <Col>
         <Editor
           placeholder="Please enter HTML here"
           label="HTML"
-          readOnly={true}
-          value={value}
+          value={htmlValue}
+          onChange={handleHtmlChange}
         />
       </Col>
     </Row>
-  );
+    <Row>
+      <Col>
+        <h3 className="pt-2 text-muted">Preview</h3>
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+        <div id="preview" style={{ minHeight: "30vh" }} className="bg-white p-2">{parse(DOMPurify.sanitize(htmlValue))}</div>
+      </Col>
+    </Row>
+  </>);
 };
 
 export default MdHtml;
