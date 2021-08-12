@@ -35,16 +35,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api.apps.ApiConfig',
+    'user_profile.apps.UserProfileConfig',
     'rest_framework',
     'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -75,8 +77,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'data/db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        "HOST": "db",
+        "NAME": "app_db",
+        "USER": "app_user",
+        "PASSWORD": "ifCASfeGS9x3owm8",
+        "PORT": "3306",
     }
 }
 
@@ -139,4 +145,11 @@ LOGGING = {
         'handlers': ['console'],
         'level': 'WARNING',
     },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES':
+    ['rest_framework.permissions.IsAuthenticated'],
+    "DEFAULT_AUTHENTICATION_CLASSES":
+    ["rest_framework.authentication.SessionAuthentication"]
 }

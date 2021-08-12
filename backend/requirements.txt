@@ -4,3 +4,5 @@ djangorestframework==3.12.4
 django-cors-headers==3.7.0
 Markdown==3.3.4
 html2markdown==0.1.7
+# django-mysql==2.2.0
+mysqlclient
