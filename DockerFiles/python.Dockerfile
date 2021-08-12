@@ -1,6 +1,8 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
 FROM python:3.8-slim-buster
 
+RUN apt-get update -y; apt-get upgrade -y; apt install default-libmysqlclient-dev -y gcc
+
 EXPOSE 8000
 
 # Keeps Python from generating .pyc files in the container
@@ -16,13 +18,13 @@ RUN python -m pip install -r requirements.txt
 WORKDIR /app
 COPY ./backend /app
 
-RUN python ./manage.py makemigrations
-RUN python ./manage.py migrate
-
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+RUN adduser -u 1000 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
+
+RUN ./manage.py makemigrations;
+RUN ./manage.py migrate;
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 # File wsgi.py was not found in subfolder: 'my-project'. Please enter the Python path to wsgi file.

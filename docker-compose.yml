@@ -8,16 +8,28 @@ services:
       dockerfile: ./DockerFiles/python.Dockerfile
     ports:
       - 8000:8000
-    volumes: 
-      - ./backend:/app
   js:
     image: frontend
     build:
       context: .
       dockerfile: ./DockerFiles/js.Dockerfile
-    environment:
-      - CHOKIDAR_USEPOLLING=true
     ports:
       - 80:80
-    volumes: 
-      - ./frontend/src:/app/src
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'app_db'
+      MYSQL_USER: 'app_user'
+      MYSQL_PASSWORD: 'ifCASfeGS9x3owm8'
+      MYSQL_ROOT_PASSWORD: 'ifCASfeGS9x3owm8'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+
+# Names our volume
+volumes:
+  my-db:

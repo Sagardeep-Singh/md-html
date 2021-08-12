@@ -1,19 +1,35 @@
 version: "3.7"
 
 services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'app_db'
+      MYSQL_USER: 'app_user'
+      MYSQL_PASSWORD: "ifCASfeGS9x3owm8"
+      MYSQL_ROOT_PASSWORD: "ifCASfeGS9x3owm8"
+    ports:
+      - '3306:3306'
+    volumes:
+      - my-dev-db:/var/lib/mysql
   python:
     image: api
+    restart: always
     build:
       context: .
       dockerfile: ./DockerFiles/python-dev.Dockerfile
+    depends_on: 
+      - db
     ports:
       - 8000:8000
     volumes:
       - ./backend/api:/app/api
+      - ./backend/user_profile:/app/user_profile
       - ./backend/backend:/app/backend
-      - ./backend/data:/app/data
   js:
     image: frontend
+    restart: always
     build:
       context: .
       dockerfile: ./DockerFiles/js-dev.Dockerfile
@@ -23,3 +39,6 @@ services:
       - 80:3000
     volumes:
       - ./frontend/src:/app/src
+# Names our volume
+volumes:
+  my-dev-db:
