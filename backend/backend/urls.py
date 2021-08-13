@@ -1,7 +1,9 @@
 from django.urls import path, include
+from django.urls.conf import re_path
+from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('auth/', include('user_profile.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('', include('api.urls')),
+    re_path(r"^.*", TemplateView.as_view(template_name='index.html'))
 ]
