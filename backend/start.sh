@@ -1,5 +1,4 @@
 chown appuser /documents;
-
 su appuser;
 
 ./manage.py makemigrations;

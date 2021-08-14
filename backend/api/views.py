@@ -1,5 +1,8 @@
 import os
+import random
+import string
 from posixpath import basename, dirname
+
 import html2markdown
 import markdown
 from django.contrib import auth
@@ -388,7 +391,24 @@ class MdToHtml(APIView):
     permission_classes = (permissions.AllowAny, )
 
     def post(self, request, format=None):
-        return Response(markdown.markdown(request.data.get('md', '')))
+        filename = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
+        mdFilePath = "/tmp/{}.md".format(filename)
+        htmlFilePath = "/tmp/{}.html".format(filename)
+
+        file = open(mdFilePath.format(filename),'w');
+        file.write(request.data.get('md', ''))
+        file.close();
+
+        os.system("/app/md2html {} > {}".format(mdFilePath,htmlFilePath))
+        
+        file = open(htmlFilePath,'r');
+        html = file.read()
+        file.close();
+        
+        os.remove(mdFilePath)
+        os.remove(htmlFilePath)
+
+        return Response(html)
 
 
 class HtmlToMd(APIView):

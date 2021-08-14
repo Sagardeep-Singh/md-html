@@ -11,7 +11,7 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
 FROM python:3.8-slim-buster
 
-RUN apt-get update -y; apt-get upgrade -y; apt install default-libmysqlclient-dev -y gcc
+RUN apt-get update -y; apt-get upgrade -y; apt install default-libmysqlclient-dev -y gcc make cmake
 
 EXPOSE 8000
 
@@ -27,6 +27,17 @@ RUN python -m pip install -r requirements.txt
 
 WORKDIR /app
 COPY ./backend /app
+
+COPY ./parser /app/parser
+WORKDIR /app/parser/md4c/
+
+RUN cmake CMakeLists.txt
+RUN make
+
+RUN mv /app/parser/md4c/md2html/md2html /app/md2html
+
+WORKDIR /app
+
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
 RUN adduser -u 1000 --disabled-password --gecos "" appuser && chown -R appuser /app

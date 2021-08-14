@@ -44,11 +44,13 @@ export const signup =
         dispatch({
           type: SIGNUP_FAIL,
         });
+        dispatch(displayMessage("Signup Failed"));
       } else {
         dispatch({
           type: SIGNUP_SUCCESS,
         });
       }
+      dispatch(displayMessage("Signup Successful"));
     } catch (err) {
       dispatch({
         type: SIGNUP_FAIL,
