@@ -1,3 +1,7 @@
+chown appuser /documents;
+
+su appuser;
+
 ./manage.py makemigrations;
 ./manage.py migrate;
-gunicorn --bind 0.0.0.0:8000 backend.wsgi
+./manage.py runserver 0:8000;
