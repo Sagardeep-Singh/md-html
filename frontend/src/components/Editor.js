@@ -1,7 +1,7 @@
 const Editor = ({ label, placeholder, readOnly, value, onChange, id }) => {
   return (
     <div className="form-floating mb-3">
-      <textarea id={id} style={{ minHeight: "50vh" }}
+      <textarea id={id} style={{ minHeight: "40vh" }}
         placeholder={placeholder}
         readOnly={readOnly}
         className="form-control bg-white w-100"
