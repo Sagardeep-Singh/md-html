@@ -1,20 +1,16 @@
 version: '3.7'
 
 services:
-  python:
-    image: api
-    build:
-      context: .
-      dockerfile: ./DockerFiles/python.Dockerfile
-    ports:
-      - 8000:8000
   js:
-    image: frontend
+    image: node:16.6.1-buster
     build:
       context: .
       dockerfile: ./DockerFiles/js.Dockerfile
     ports:
-      - 80:80
+      - 3000:80
+    volumes:
+      - app-static:/build
+    entrypoint: cp -vr /app/build/ /
   db:
     image: mysql:5.7
     restart: always
@@ -29,7 +25,25 @@ services:
       - '3306'
     volumes:
       - my-db:/var/lib/mysql
+  python:
+    image: api
+    build:
+      context: .
+      dockerfile: ./DockerFiles/python.Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - app-static:/app/build
+      - app-documents:/app/documents
+    environment: 
+      REACT_APP_API_URL: 'http://192.168.1.19/api'
+      DOCUMENT_PATH: '/app/documents/'
+    depends_on: 
+      - db
+      # - js
 
 # Names our volume
 volumes:
   my-db:
+  app-static:
+  app-documents:

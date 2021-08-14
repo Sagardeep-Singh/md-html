@@ -18,27 +18,27 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./DockerFiles/python-dev.Dockerfile
+      dockerfile: ./DockerFiles/python.Dockerfile
     depends_on: 
       - db
+      - js
     ports:
-      - 8000:8000
+      - 80:8000
     volumes:
-      - ./backend/api:/app/api
-      - ./backend/user_profile:/app/user_profile
-      - ./backend/backend:/app/backend
+      - ./backend:/app/
+      - app-documents-dev:/documents
+      - app-static-dev:/app/build
+    environment: 
+      DOCUMENT_PATH: '/documents/'
   js:
-    image: frontend
-    restart: always
-    build:
-      context: .
-      dockerfile: ./DockerFiles/js-dev.Dockerfile
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    ports:
-      - 80:3000
+    image: node:16.6.1-buster
     volumes:
-      - ./frontend/src:/app/src
+      - app-static-dev:/build
+      - ./frontend:/app
+    entrypoint: bash /app/start.sh
+      
 # Names our volume
 volumes:
   my-dev-db:
+  app-static-dev:
+  app-documents-dev:
