@@ -22,7 +22,7 @@ const MdHtml = ({
   const [mdValue, setMdValue] = useState("__Please _Type_ ~Here~__");
   const [htmlValue, setHtmlValue] = useState(mdValue);
   const [name, setName] = useState("");
-  const [autoSave, setAutoSave] = useState("");
+  // const [autoSave, setAutoSave] = useState("");
   const [sendToDocuments, setSendToDocuments] = useState(false);
   const { id = null } = useParams();
 
@@ -76,7 +76,7 @@ const MdHtml = ({
       getDocument(id).then((res) => {
         setMdValue(res.data.md);
         setName(res.data.document.name);
-        setAutoSave(res.data.document.auto_save);
+        // setAutoSave(res.data.document.auto_save);
         getHtml(res.data.md).then((res) => setHtmlValue(res.data));
       });
   }, [id]);
@@ -89,10 +89,10 @@ const MdHtml = ({
     e.preventDefault();
 
     if (id === null) {
-      createDocument(name, mdValue, autoSave);
+      createDocument(name, mdValue);
       setSendToDocuments(true);
     } else {
-      saveDocument(id, name, mdValue, autoSave);
+      saveDocument(id, name, mdValue);
     }
   };
 
@@ -103,9 +103,9 @@ const MdHtml = ({
     setSendToDocuments(true);
   };
 
-  const handleCheckboxClick = (e) => {
-    setAutoSave(!autoSave);
-  };
+  // const handleCheckboxClick = (e) => {
+  //   setAutoSave(!autoSave);
+  // };
 
   // useEffect(() => {
   //   if (!autoSave) {

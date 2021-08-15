@@ -19,7 +19,7 @@ const Documents = () => {
 
   useEffect(() => {
     loadDocuments();
-  });
+  },[]);
 
   return (
     <ul>

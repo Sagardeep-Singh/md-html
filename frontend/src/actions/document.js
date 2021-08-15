@@ -3,7 +3,7 @@ import { DOCUMENT_SAVE_SUCCESS, DOCUMENT_SAVE_FAIL } from "./types";
 import Cookies from "js-cookie";
 import { displayMessage, displayError } from "./message";
 
-export const saveDocument = (id, name, md, auto_save, notice = true) => async (dispatch) => {
+export const saveDocument = (id, name, md, notice = true) => async (dispatch) => {
   const config = {
     headers: {
       Accept: "application/json",
@@ -18,7 +18,6 @@ export const saveDocument = (id, name, md, auto_save, notice = true) => async (d
       {
         name,
         md,
-        auto_save,
       },
       config
     );
@@ -43,7 +42,7 @@ export const saveDocument = (id, name, md, auto_save, notice = true) => async (d
   }
 };
 
-export const createDocument = (name, md, auto_save) => async (dispatch) => {
+export const createDocument = (name, md) => async (dispatch) => {
   const config = {
     headers: {
       Accept: "application/json",
@@ -58,7 +57,6 @@ export const createDocument = (name, md, auto_save) => async (dispatch) => {
       {
         name,
         md,
-        auto_save,
       },
       config
     );
